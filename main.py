@@ -1,16 +1,25 @@
 # This is a sample Python script.
+from hashlib import sha512;
+from Crypto.PublicKey import RSA
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+message = b"Hi bitcoin@"
+#print(message)
 
+hashed = int.from_bytes(sha512(message).digest(), byteorder='big')
+#print(sha512(message))
+#print(hashed)
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+keyPair = RSA.generate(bits =1024)
+message = b"Original Message"
+hashedMessage = int.from_bytes(sha512(message).digest(), byteorder='big')
 
+signature = pow(hashedMessage, keyPair.d, keyPair.n)
+#print(hex(signature))
+hashedFromSignature = pow(signature, keyPair.e, keyPair.n)
+print(hashedMessage)
+print(hashedFromSignature)
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+print(b"original message", hex(signature))
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+hashedMessage2 = int.from_bytes(sha512(b"original message").digest(), byteorder='big')
+print(hashedMessage2)
